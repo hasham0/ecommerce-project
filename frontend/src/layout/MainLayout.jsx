@@ -1,3 +1,4 @@
+import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import { Outlet } from "react-router";
 
@@ -8,6 +9,7 @@ export default function MainLayout() {
       <main className="min-h-screen">
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 }

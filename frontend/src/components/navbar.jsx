@@ -29,13 +29,13 @@ const Navbar = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* <!-- logo --> */}
-          <div>
+          <Link to="/" className="flex items-center space-x-2">
             <img
               src={Logo}
               alt="E-Commerce Logo"
               className="h-12 w-12 rounded-full bg-white object-contain shadow-md"
             />
-          </div>
+          </Link>
           {/* <!-- navigation links on medium and large screens --> */}
           <div className="hidden md:flex md:items-center md:space-x-4">
             <Link

@@ -3,17 +3,11 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "printWidth": 80,
-  "plugins": ["prettier-plugin-tailwindcss", "@ianvs/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "^[./]",
-    "^@core/(.*)$",
-    "<THIRD_PARTY_MODULES>",
-    "^@server/(.*)$",
-    "^@components/(.*)$",
-    "^@ui/(.*)$",
-    "^@/(.*)$",
-    "^react$"
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports"
   ],
+  "importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "^[./]"],
   "importOrderParserPlugins": ["jsx", "decorators-legacy"],
   "importOrderTypeScriptVersion": "5.0.0",
   "importOrderCaseSensitive": false

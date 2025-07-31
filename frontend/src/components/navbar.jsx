@@ -1,8 +1,8 @@
-import Logo from "../assets/logo.png";
+import { useEffect, useState } from "react";
 import { FaRegUserCircle, FaSearch, FaShoppingCart } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link } from "react-router";
-import { useEffect, useState } from "react";
+import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +44,7 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link to="/profile">
+            <Link to="/login">
               <FaRegUserCircle
                 size={20}
                 className="text-2xl hover:text-green-600"
@@ -72,7 +72,10 @@ const Navbar = () => {
               <Link className="block text-gray-700 hover:text-green-700">
                 Home
               </Link>
-              <Link className="block text-gray-700 hover:text-green-700">
+              <Link
+                to={"/login"}
+                className="block text-gray-700 hover:text-green-700"
+              >
                 Profile
               </Link>
               <Link className="block text-gray-700 hover:text-green-700">

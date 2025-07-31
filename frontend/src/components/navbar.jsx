@@ -78,7 +78,10 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              <Link className="block text-gray-700 hover:text-green-700">
+              <Link
+                to={"/cart"}
+                className="block text-gray-700 hover:text-green-700"
+              >
                 Cart
               </Link>
               <Link className="block text-gray-700 hover:text-green-700">

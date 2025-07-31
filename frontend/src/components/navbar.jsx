@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { FaRegUserCircle, FaSearch, FaShoppingCart } from "react-icons/fa";
+import {
+  FaHome,
+  FaRegUserCircle,
+  FaSearch,
+  FaShoppingCart,
+} from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link } from "react-router";
 import Logo from "../assets/logo.png";
@@ -36,13 +41,27 @@ const Navbar = () => {
               className="h-12 w-12 rounded-full bg-white object-contain shadow-md"
             />
           </Link>
+          {/* <!-- search bar --> */}
+          <div className="mx-4 flex-1">
+            <div className="relative mx-auto w-full md:w-4/5">
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full rounded-full border border-gray-300 bg-white px-4 py-2 pr-12 indent-3 focus:border-green-500 focus:outline-none"
+              />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                <FaSearch size={18} className="text-gray-400" />
+              </div>
+            </div>
+          </div>
+
           {/* <!-- navigation links on medium and large screens --> */}
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          <div className="hidden md:flex md:items-center md:space-x-6">
             <Link
               to="/"
               className="font-semibold text-gray-700 hover:text-green-600"
             >
-              Home
+              <FaHome size={20} className="text-2xl hover:text-green-600" />
             </Link>
             <Link to="/login">
               <FaRegUserCircle
@@ -55,9 +74,6 @@ const Navbar = () => {
                 size={20}
                 className="text-2xl hover:text-green-600"
               />
-            </Link>
-            <Link to="/search">
-              <FaSearch size={20} className="text-2xl hover:text-green-600" />
             </Link>
           </div>
           {/* <!-- navigation links on small screens */}
@@ -83,9 +99,6 @@ const Navbar = () => {
                 className="block text-gray-700 hover:text-green-700"
               >
                 Cart
-              </Link>
-              <Link className="block text-gray-700 hover:text-green-700">
-                Search
               </Link>
             </div>
           )}

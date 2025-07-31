@@ -4,8 +4,8 @@
   "trailingComma": "es5",
   "printWidth": 80,
   "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@ianvs/prettier-plugin-sort-imports"
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
   ],
   "importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "^[./]"],
   "importOrderParserPlugins": ["jsx", "decorators-legacy"],

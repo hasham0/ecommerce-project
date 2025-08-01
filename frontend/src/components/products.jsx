@@ -23,7 +23,7 @@ const Products = () => {
   ];
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-6">
+    <section className="mx-auto max-w-7xl px-6 py-8 md:py-14">
       <h2 className="mb-6 text-2xl font-semibold text-gray-700">
         Trending Products
       </h2>

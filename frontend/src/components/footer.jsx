@@ -4,7 +4,7 @@ import Logo from "../assets/logo.png";
 
 const Footer = () => {
   return (
-    <footer className="mt-16 border-t border-gray-200 bg-gradient-to-r from-green-200 to-white">
+    <footer className="border-t border-gray-200 bg-gradient-to-r from-green-200 to-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-10 text-gray-700 md:grid-cols-2">
         {/* <!-- logo --> */}
         <div className="flex flex-col items-center md:items-start">
@@ -18,7 +18,7 @@ const Footer = () => {
         <div className="grid w-full grid-cols-1 gap-4 text-sm sm:grid-cols-2">
           <div className="flex flex-col items-center">
             <h3 className="mb-3 text-lg font-semibold">Quick Links</h3>
-            <ul className="flex flex-col items-center space-x-2 text-sm">
+            <ul className="flex flex-col items-center space-y-2 text-sm">
               <li>
                 <Link to={"/"} className="hover:text-green-500">
                   Home

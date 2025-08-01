@@ -34,7 +34,7 @@ export default function Register() {
         </h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="">
+          <div>
             <label
               htmlFor="username"
               className="block text-sm font-medium text-gray-700"
@@ -51,7 +51,7 @@ export default function Register() {
               required
             />
           </div>
-          <div className="">
+          <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
@@ -94,7 +94,7 @@ export default function Register() {
               {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
             </button>
           </div>
-          <div className="">
+          <div>
             <label
               htmlFor="phoneNumber"
               className="block text-sm font-medium text-gray-700"

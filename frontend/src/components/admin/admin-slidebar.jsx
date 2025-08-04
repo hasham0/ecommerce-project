@@ -25,6 +25,16 @@ const AdminSidebar = () => {
           }
         >
           Manage Products
+        </NavLink>{" "}
+        <NavLink
+          to="/admin/quries"
+          className={({ isActive }) =>
+            isActive
+              ? "block font-semibold text-green-600"
+              : "block text-white hover:text-green-600"
+          }
+        >
+          Manage Queries
         </NavLink>
         <NavLink
           to="/"

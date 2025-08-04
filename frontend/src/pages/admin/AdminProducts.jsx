@@ -1,7 +1,8 @@
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function AdminProducts() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Manage Products</h1>
@@ -24,7 +25,10 @@ export default function AdminProducts() {
           <p className="text-sm text-gray-400">Category: Home</p>
           <p className="mt-1 font-bold text-green-500">Price: $100</p>
           <div className="flex justify-between gap-2">
-            <button className="mt-4 flex flex-1 justify-center rounded-lg bg-gray-600 p-2 text-center text-white transition hover:bg-gray-700">
+            <button
+              onClick={() => navigate("/admin/edit-product/123")}
+              className="mt-4 flex flex-1 justify-center rounded-lg bg-gray-600 p-2 text-center text-white transition hover:bg-gray-700"
+            >
               <FaEdit />
             </button>
             <button className="mt-4 flex flex-1 justify-center rounded-lg bg-red-600 p-2 text-center text-white transition hover:bg-red-700">

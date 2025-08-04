@@ -6,6 +6,7 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { MdContactSupport } from "react-icons/md";
 import { Link } from "react-router";
 import Logo from "../assets/logo.png";
 
@@ -63,6 +64,15 @@ const Navbar = () => {
             >
               <FaHome size={20} className="text-2xl hover:text-green-600" />
             </Link>
+            <Link
+              to="/contact"
+              className="font-semibold text-gray-700 hover:text-green-600"
+            >
+              <MdContactSupport
+                size={20}
+                className="text-2xl hover:text-green-600"
+              />
+            </Link>
             <Link to="/login">
               <FaRegUserCircle
                 size={20}
@@ -85,8 +95,14 @@ const Navbar = () => {
           {/* <!-- mobile menu --> */}
           {isOpen && (
             <div className="absolute top-16 right-0 flex w-full flex-col items-center space-y-2 bg-white px-4 pt-2 pb-4 shadow-md md:hidden">
-              <Link className="block text-gray-700 hover:text-green-700">
+              <Link to="/" className="block text-gray-700 hover:text-green-700">
                 Home
+              </Link>
+              <Link
+                to="/contact"
+                className="block text-gray-700 hover:text-green-700"
+              >
+                Contact
               </Link>
               <Link
                 to={"/login"}

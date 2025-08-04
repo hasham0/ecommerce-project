@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-export default function AddProduct() {
+export default function EditProduct() {
+  const params = useParams();
+  console.log("🚀 ~ EditProduct ~ params:", params._id);
+
   const navigate = useNavigate();
   const [productInfo, setProductInfo] = useState({
     name: "",
@@ -19,7 +22,7 @@ export default function AddProduct() {
   };
   return (
     <div className="flex-1 bg-gray-50 p-10">
-      <h1 className="mb-6 text-3xl font-bold text-gray-800">Add Products</h1>
+      <h1 className="mb-6 text-3xl font-bold text-gray-800">Edit Products</h1>
       <button
         onClick={() => navigate("/admin/products")}
         className="flex items-center gap-2 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
@@ -80,6 +83,22 @@ export default function AddProduct() {
             <option value={"Electronics"}>Electronics</option>
             <option value={"Mobile"}>Mobile</option>
             <option value={"Beauty"}>Beauty</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="" className="block text-sm font-medium text-gray-700">
+            Action
+          </label>
+          <select
+            name=""
+            id=""
+            value={productInfo.name}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+          >
+            <option value={"All"}>--Select--</option>
+            <option value={"Cafe"}>In-Stock</option>
+            <option value={"Home"}>Out-Of-Stock</option>
           </select>
         </div>
         <div>

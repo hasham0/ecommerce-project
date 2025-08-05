@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaRegEye, FaRegEyeSlash, FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 
@@ -7,6 +8,7 @@ export default function Login() {
   const [userLoginCredentials, setUserLoginCredentials] = useState({
     email: "",
     password: "",
+    role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -15,9 +17,34 @@ export default function Login() {
     setUserLoginCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("User Credentials:", userLoginCredentials);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userLoginCredentials),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Something went wrong");
+      }
+      const data = await response.json();
+      console.log("🚀 ~ handleSubmit ~ data:", data.user);
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      }
+      setUserLoginCredentials({
+        email: "",
+        password: "",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -87,7 +114,7 @@ export default function Login() {
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?
+          Don't have an account?&nbsp;
           <Link
             to="/register"
             className="text-green-500 hover:text-green-600 hover:underline"

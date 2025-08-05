@@ -16,9 +16,31 @@ export default function Register() {
     const { name, value } = e.target;
     setUserRegisterCredentials((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("User Credentials:", userRegisterCredentials);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userRegisterCredentials),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Something went wrong");
+      }
+      setUserRegisterCredentials({
+        username: "",
+        email: "",
+        password: "",
+        phoneNumber: "",
+      });
+      navigate("/login");
+    } catch (error) {
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+      toast.error(error.message);
+    }
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-80 backdrop-blur-sm">

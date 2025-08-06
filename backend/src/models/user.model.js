@@ -5,41 +5,46 @@ import jwt from "jsonwebtoken";
 
 const { Schema, model, models } = mongoose;
 
-const userSchema = new Schema({
-  username: {
-    type: String,
-    minLength: [3, "please provide atleast 3 characters"],
-    maxLength: [20],
-    required: [true, "please provide the username"],
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      minLength: [3, "please provide atleast 3 characters"],
+      maxLength: [20],
+      required: [true, "please provide the username"],
+    },
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: "Email address is required",
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
+    },
+    password: {
+      type: String,
+      minLength: [5, "please provide atleast 5 characters"],
+      maxLength: [200],
+      select: false,
+      required: [true, "please provide the password"],
+    },
+    phoneNumber: {
+      type: String,
+      minLength: [11, "please provide atleast 11 characters"],
+      required: [true, "please provide the phone number"],
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
   },
-  email: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: "Email address is required",
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please fill a valid email address",
-    ],
-  },
-  password: {
-    type: String,
-    minLength: [5, "please provide atleast 5 characters"],
-    maxLength: [200],
-    select: false,
-    required: [true, "please provide the password"],
-  },
-  phoneNumber: {
-    type: String,
-    minLength: [11, "please provide atleast 11 characters"],
-    required: [true, "please provide the phone number"],
-  },
-  role: {
-    type: String,
-    enum: ["admin", "user"],
-    default: "user",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // encrypt password
 userSchema.pre("save", async function (next) {

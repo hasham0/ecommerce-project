@@ -8,8 +8,9 @@ import morgan from "morgan";
 import express from "express";
 import cookieParser from "cookie-parser";
 
-// import api routes
-import routes from "./routers/routes.js";
+// import routes
+import userRoutes from "./routers/user.routes.js";
+import adminRoutes from "./routers/admin.routes.js";
 
 // import global level error handle middlewares
 import errorMiddleware from "./middlewares/error.middleware.js";
@@ -32,7 +33,8 @@ app.use(
 );
 
 // set routes
-app.use("/api", routes);
+app.use("/api/auth", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 // set global level error handling middlwere
 app.use(errorMiddleware);

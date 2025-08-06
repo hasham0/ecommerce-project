@@ -27,11 +27,11 @@ const registerUser = asyncHandler(async (request, response) => {
     role: "user",
   });
 
-  response.status(200).json({ message: "User registered successfully" });
+  return response.status(200).json({ message: "User registered successfully" });
 });
 
 const loginUser = asyncHandler(async (request, response) => {
-  const { email, password, role } = request.body;
+  const { email, password } = request.body;
 
   if (hasEmptyFields(email, password)) {
     throw new ValidationError("All fields are required");
@@ -43,7 +43,7 @@ const loginUser = asyncHandler(async (request, response) => {
   }
 
   const isPasswordMatch = await isUserExists.isPasswordCorrect(password);
-  if (!isPasswordMatch || isUserExists.role !== role) {
+  if (!isPasswordMatch) {
     throw new CustomError("Invalid credentials", 400);
   }
 
@@ -52,7 +52,7 @@ const loginUser = asyncHandler(async (request, response) => {
   const userObject = isUserExists.toObject();
   delete userObject.password;
 
-  response
+  return response
     .status(200)
     .cookie(ACCESS_TOKEN, token, cookieOptions)
     .json({

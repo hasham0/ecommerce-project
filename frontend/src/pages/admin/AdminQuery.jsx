@@ -25,7 +25,7 @@ export default function AdminQuery() {
               <th className="px-6 py-3">Delete</th>
             </tr>
           </thead>
-          <tbody>
+          {/* <tbody>
             {queries.map((q, index) => (
               <tr
                 key={q.id}
@@ -63,7 +63,7 @@ export default function AdminQuery() {
                 </td>
               </tr>
             ))}
-          </tbody>
+          </tbody> */}
         </table>
       </div>
     </div>

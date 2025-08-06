@@ -17,8 +17,8 @@ export default function Register() {
     setUserRegisterCredentials((prev) => ({ ...prev, [name]: value }));
   };
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {

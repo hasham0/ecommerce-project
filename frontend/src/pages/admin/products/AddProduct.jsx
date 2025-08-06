@@ -6,16 +6,41 @@ export default function AddProduct() {
   const navigate = useNavigate();
   const [productInfo, setProductInfo] = useState({
     name: "",
-    price: 0,
+    price: "",
+    category: "",
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProductInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Products:");
+    try {
+      const response = await fetch("/api/admin/add-product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productInfo),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Something went wrong");
+      }
+      const data = await response.json();
+      toast.success(data.message);
+      navigate("/admin/products");
+    } catch (error) {
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+      toast.error(error.message);
+    } finally {
+      setProductInfo({
+        name: "",
+        price: "",
+        category: "",
+      });
+    }
   };
   return (
     <div className="flex-1 bg-gray-50 p-10">
@@ -51,7 +76,7 @@ export default function AddProduct() {
             Price
           </label>
           <input
-            type="number"
+            type="text"
             id="price"
             name="price"
             value={productInfo.price}
@@ -66,9 +91,9 @@ export default function AddProduct() {
             Categories
           </label>
           <select
-            name=""
+            name="category"
             id=""
-            value={productInfo.name}
+            value={productInfo.category}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
@@ -82,7 +107,7 @@ export default function AddProduct() {
             <option value={"Beauty"}>Beauty</option>
           </select>
         </div>
-        <div>
+        {/* <div>
           <label htmlFor="" className="block text-sm font-medium text-gray-700">
             Product Image
           </label>
@@ -96,7 +121,7 @@ export default function AddProduct() {
             required
             className="mt-1 w-full rounded-md border border-gray-300 p-2 shadow-sm"
           />
-        </div>
+        </div> */}
         <div className="flex justify-end">
           <button
             type="submit"

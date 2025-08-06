@@ -1,4 +1,8 @@
+import { useProductContext } from "../../context/product-provider";
+
 export default function AdminDashboard() {
+  const { products } = useProductContext();
+
   return (
     <div className="min-h-screen flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -7,7 +11,9 @@ export default function AdminDashboard() {
           <h2 className="text-xl font-semibold text-gray-800">
             Total Products
           </h2>
-          <p className="mt-3 text-3xl font-bold text-green-700">32</p>
+          <p className="mt-3 text-3xl font-bold text-green-700">
+            {products.length}
+          </p>
         </div>
       </div>
     </div>

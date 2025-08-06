@@ -8,7 +8,6 @@ export default function Login() {
   const [userLoginCredentials, setUserLoginCredentials] = useState({
     email: "",
     password: "",
-    role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -18,8 +17,8 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -31,19 +30,20 @@ export default function Login() {
         const error = await response.json();
         throw new Error(error.message || "Something went wrong");
       }
-      const data = await response.json();
-      console.log("🚀 ~ handleSubmit ~ data:", data.user);
-      if (data.user.role === "admin") {
-        navigate("/admin");
+      const result = await response.json();
+      toast.success(result.message);
+      if (result.user.role === "admin") {
+        return navigate("/admin");
       }
-      setUserLoginCredentials({
-        email: "",
-        password: "",
-      });
       navigate("/");
     } catch (error) {
       console.error("🚀 ~ handleSubmit ~ error:", error);
       toast.error(error.message);
+    } finally {
+      setUserLoginCredentials({
+        email: "",
+        password: "",
+      });
     }
   };
 

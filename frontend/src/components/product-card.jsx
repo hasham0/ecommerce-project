@@ -9,7 +9,9 @@ const ProductCard = ({ product }) => {
         className="rounded-xl bg-white p-4 shadow transition hover:shadow-lg"
       >
         <img
-          src={product.image || "https://placehold.co/600x400"}
+          src={
+            `/uploads/${product.productImage}` || "https://placehold.co/600x400"
+          }
           alt={product.productName}
           className="mb-4 h-40 w-full rounded-md object-cover"
         />
@@ -29,5 +31,4 @@ const ProductCard = ({ product }) => {
     </div>
   );
 };
-
 export default ProductCard;

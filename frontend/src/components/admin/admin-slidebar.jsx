@@ -27,7 +27,7 @@ const AdminSidebar = () => {
           Manage Products
         </NavLink>
         <NavLink
-          to="/admin/quries"
+          to="/admin/queries"
           className={({ isActive }) =>
             isActive
               ? "block font-semibold text-green-600"
@@ -46,5 +46,4 @@ const AdminSidebar = () => {
     </div>
   );
 };
-
 export default AdminSidebar;

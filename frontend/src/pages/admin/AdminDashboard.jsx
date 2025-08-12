@@ -2,7 +2,6 @@ import { useProductContext } from "../../context/product-provider";
 
 export default function AdminDashboard() {
   const { products } = useProductContext();
-
   return (
     <div className="min-h-screen flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Admin Dashboard</h1>

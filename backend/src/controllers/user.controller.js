@@ -12,16 +12,13 @@ import Query from "../models/query.model.js";
 // ✅ Register User
 const registerUser = asyncHandler(async (request, response) => {
   const { username, email, password, phoneNumber } = request.body;
-
   if (hasEmptyFields(username, email, password, phoneNumber)) {
     throw new ValidationError("All fields are required");
   }
-
   const isUserExists = await User.findOne({ email });
   if (isUserExists) {
     throw new CustomError("User already exists with this email", 400);
   }
-
   await User.create({
     username,
     email,
@@ -29,33 +26,26 @@ const registerUser = asyncHandler(async (request, response) => {
     phoneNumber,
     role: "user",
   });
-
   return response.status(200).json({ message: "User registered successfully" });
 });
 
 // ✅ Login User
 const loginUser = asyncHandler(async (request, response) => {
   const { email, password } = request.body;
-
   if (hasEmptyFields(email, password)) {
     throw new ValidationError("All fields are required");
   }
-
   const isUserExists = await User.findOne({ email }).select("+password");
   if (!isUserExists) {
     throw new CustomError("User does not exist with this email", 400);
   }
-
   const isPasswordMatch = await isUserExists.isPasswordCorrect(password);
   if (!isPasswordMatch) {
     throw new CustomError("Invalid credentials", 400);
   }
-
   const token = await isUserExists.generateAuthToken();
-
   const userObject = isUserExists.toObject();
   delete userObject.password;
-
   return response
     .status(200)
     .cookie(ACCESS_TOKEN, token, cookieOptions)
@@ -70,11 +60,9 @@ const userProducts = asyncHandler(async (request, response) => {
   const products = await Product.find({
     productStatus: "In-Stock",
   });
-
   if (!products.length) {
     throw new CustomError("No products found", 404);
   }
-
   return response.status(200).json({ data: products });
 });
 
@@ -84,13 +72,11 @@ const userQuery = asyncHandler(async (request, response) => {
   if (hasEmptyFields(username, email, queryText)) {
     throw new ValidationError("All fields are required");
   }
-
   const query = await Query.create({
     username,
     email,
     query: queryText,
   });
-
   return response
     .status(200)
     .json({ data: query, message: "Query submitted successfully" });

@@ -4,11 +4,9 @@ import { useQueryContext } from "../../context/query-provider";
 export default function AdminQuery() {
   const navigate = useNavigate();
   const { queries, deleteQuery } = useQueryContext();
-
   return (
     <div className="flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Admin Queries</h1>
-
       <div className="relative overflow-x-auto rounded-lg shadow">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-100 text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-300">

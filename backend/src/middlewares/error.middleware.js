@@ -4,11 +4,8 @@ function errorMiddleware(error, req, res, next) {
   let statusCode = error.statusCode || 500;
   let message = error.message || "Something went wrong";
   let errors = error.errors || [];
-
   // Customize error message based on error type
-
   const err = Object.assign({}, errors);
-
   switch (err.name || err.type) {
     case "ValidationError":
       message = Object.values(err.errors)
@@ -33,7 +30,6 @@ function errorMiddleware(error, req, res, next) {
       message;
       break;
   }
-
   // Send response to the user
   return res.status(statusCode).json({
     success: false,

@@ -5,18 +5,15 @@ import { useProductContext } from "../../context/product-provider";
 export default function AdminProducts() {
   const navigate = useNavigate();
   const { products, deleteProduct } = useProductContext();
-
   return (
     <div className="flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Manage Products</h1>
-
       <Link to="/admin/add-product">
         <button className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-800">
           <FaPlus />
           Add Product
         </button>
       </Link>
-
       <div className="mt-8">
         {products.length === 0 ? (
           <div className="text-md flex h-64 w-full items-center justify-center rounded-lg border border-dashed border-gray-300 text-center text-gray-500 md:text-2xl">
@@ -31,7 +28,10 @@ export default function AdminProducts() {
                   className="rounded-xl bg-white p-4 shadow transition hover:shadow-lg"
                 >
                   <img
-                    src={"https://placehold.co/600x400"}
+                    src={
+                      `/uploads/${product.productImage}` ||
+                      "https://placehold.co/600x400"
+                    }
                     alt={product.productName}
                     className="mb-4 h-40 w-full rounded-md object-cover"
                   />

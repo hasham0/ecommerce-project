@@ -1,27 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
+import { useQueryContext } from "../../../context/query-provider";
 
 export default function QueryReply() {
-  const params = useParams();
+  const { _id } = useParams();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
+  const { queries, replyQuery, setQueries } = useQueryContext();
+  const query = queries.find((q) => q._id === _id);
+  const [replyFormData, setReplyFormData] = useState({
     to: "",
     from: "",
     subject: "",
     body: "",
   });
-
+  //  set up user provider
+  useEffect(() => {
+    if (query) {
+      setReplyFormData({
+        to: query.email || "",
+        from: "hashamsaleem75@gmail.com",
+        subject: query.query || "",
+        body: "",
+      });
+    }
+  }, [query]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setReplyFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    try {
+      const result = await replyQuery(_id, replyFormData);
+      const updatedQueries = queries.map((query) =>
+        query._id === _id ? result.data : query
+      );
+      setQueries(updatedQueries);
+      toast.success(result.message);
+      navigate("/admin/queries");
+    } catch (error) {
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+      toast.error(error.message);
+    } finally {
+      setReplyFormData({
+        to: "",
+        from: "hashamsaleem75@gmail.com",
+        subject: "",
+        body: "",
+      });
+    }
   };
-
   return (
     <div className="flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Query Reply</h1>
@@ -29,6 +58,7 @@ export default function QueryReply() {
         onSubmit={handleSubmit}
         className="mx-auto my-4 max-w-3xl space-y-6 rounded-xl bg-white p-6 shadow-md"
       >
+        {/* To */}
         <div>
           <label
             htmlFor="to"
@@ -40,13 +70,14 @@ export default function QueryReply() {
             id="to"
             type="text"
             name="to"
-            value={formData.to}
-            onChange={handleInputChange}
+            value={replyFormData.to}
+            disabled={true}
             required
             placeholder="mail-to"
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           />
         </div>
+        {/* From */}
         <div>
           <label
             htmlFor="from"
@@ -58,13 +89,14 @@ export default function QueryReply() {
             id="from"
             type="text"
             name="from"
-            value={formData.from}
-            onChange={handleInputChange}
+            value={replyFormData.from}
+            disabled={true}
             required
             placeholder="mail-from"
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           />
         </div>
+        {/* Subject */}
         <div>
           <label
             htmlFor="subject"
@@ -76,13 +108,14 @@ export default function QueryReply() {
             id="subject"
             type="text"
             name="subject"
-            value={formData.subject}
-            onChange={handleInputChange}
+            value={replyFormData.subject}
+            disabled={true}
             required
             placeholder="subject"
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           />
         </div>
+        {/* Body */}
         <div>
           <label
             htmlFor="body"
@@ -91,14 +124,14 @@ export default function QueryReply() {
             Body
           </label>
           <textarea
-            type=""
             id="body"
             name="body"
-            value={formData.body}
+            value={replyFormData.body}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-green-500 focus:ring-green-500"
+            rows={5}
             required
-          ></textarea>
+            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-green-500 focus:ring-green-500"
+          />
         </div>
         <div className="flex justify-end">
           <button

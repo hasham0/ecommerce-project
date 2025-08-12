@@ -59,7 +59,7 @@ const router = createBrowserRouter([
             element: <EditProduct />,
           },
           {
-            path: "quries",
+            path: "queries",
             element: <AdminQuery />,
           },
           {
@@ -71,5 +71,4 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
 export default router;

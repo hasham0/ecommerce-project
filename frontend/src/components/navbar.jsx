@@ -15,21 +15,17 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsOpen((open) => !open);
   };
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsOpen(false); // Close the menu on larger screens
       }
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
   return (
     <nav className="z-10 bg-gradient-to-r from-green-200 to-white shadow-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -55,7 +51,6 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-
           {/* <!-- navigation links on medium and large screens --> */}
           <div className="hidden md:flex md:items-center md:space-x-6">
             <Link
@@ -123,5 +118,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;

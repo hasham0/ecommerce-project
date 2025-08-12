@@ -20,6 +20,7 @@ const app = express();
 
 // set middlewares
 app.use(express.json());
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());

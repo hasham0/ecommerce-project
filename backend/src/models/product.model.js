@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const { Schema, model, models } = mongoose;
-
 const productSchema = new Schema(
   {
     productName: {
@@ -28,12 +27,15 @@ const productSchema = new Schema(
       default: "Out-Of-Stock",
       required: [true, "please provide the product status"],
     },
+    productImage: {
+      type: String,
+      required: [true, "please provide the product image"],
+    },
   },
   {
     timestamps: true,
   }
 );
-
 const Product = models.Product || model("Product", productSchema);
 
 export default Product;

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-// Create context
 export const ProductContext = createContext({
   products: [],
   userProducts: [],
@@ -9,123 +8,113 @@ export const ProductContext = createContext({
   updateProduct: () => {},
   deleteProduct: () => {},
 });
-
-// Provider
 export default function ProductProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
-
-  const addProduct = async (productInfo) => {
-    const response = await fetch("/api/admin/add-product", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productInfo),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Something went wrong");
-    }
-    const data = await response.json();
-    setProducts((prevProducts) => [...prevProducts, data.data]);
-    return data;
-  };
-
-  // Fetch all products on mount
+  // Fetch all products
   const fetchAllProducts = async () => {
     try {
       const response = await fetch("/api/admin/all-products");
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || "Something went wrong");
-      }
-
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).message || "Something went wrong"
+        );
       const result = await response.json();
-      setProducts(result.data);
+      setProducts(result.data || []);
     } catch (error) {
       console.error("❌ Error fetching products:", error);
       toast.error(error.message || "Failed to fetch products");
     }
   };
-
-  // Fetch all user products on mount
+  // Fetch products for the current user
   const fetchAllUserProducts = async () => {
     try {
       const response = await fetch("/api/auth/user-products");
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || "Something went wrong");
-      }
-
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).message || "Something went wrong"
+        );
       const result = await response.json();
-      setUserProducts(result.data);
+      setUserProducts(result.data || []);
     } catch (error) {
-      console.error("❌ Error fetching products:", error);
+      console.error("❌ Error fetching user products:", error);
       toast.error(error.message || "Failed to fetch products");
     }
   };
-
-  // Initial fetch
-  useEffect(() => {
-    fetchAllProducts();
-    fetchAllUserProducts();
-  }, []);
-
-  // update product by ID
-  const updateProduct = async (_id, data) => {
+  // Add product (update state directly)
+  const addProduct = async (formData) => {
+    try {
+      const response = await fetch("/api/admin/add-product", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).message || "Something went wrong"
+        );
+      const data = await response.json();
+      // Update products state instantly
+      setProducts((prev) => [...prev, data.data]);
+      setUserProducts((prev) => [...prev, data.data]);
+      return data;
+    } catch (error) {
+      console.error("❌ Error adding product:", error);
+      toast.error(error.message || "Failed to add product");
+      throw error;
+    }
+  };
+  // Update product (update state directly)
+  const updateProduct = async (_id, formData) => {
     try {
       const response = await fetch(`/api/admin/update-product/${_id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
-
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || "Something went wrong");
-      }
-
-      const updatedProduct = await response.json();
-
-      // Replace the updated product in the list
-      const updatedProducts = products.map((product) =>
-        product._id === _id ? updatedProduct.data : product
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).message || "Something went wrong"
+        );
+      const result = await response.json();
+      // Update products list instantly
+      setProducts((prev) =>
+        prev.map((product) => (product._id === _id ? result.data : product))
       );
-
-      setProducts(updatedProducts);
-      toast.success("Product updated successfully");
+      // Also update userProducts if it exists
+      setUserProducts((prev) =>
+        prev.map((product) => (product._id === _id ? result.data : product))
+      );
       return true;
     } catch (error) {
       console.error("❌ Error updating product:", error);
       toast.error(error.message || "Failed to update product");
+      throw error;
     }
   };
-
-  // Delete product by ID
+  // Delete product (update state directly)
   const deleteProduct = async (_id) => {
     try {
       const response = await fetch(`/api/admin/delete-product/${_id}`, {
         method: "DELETE",
       });
-
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || "Something went wrong");
-      }
-
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).message || "Something went wrong"
+        );
       const result = await response.json();
-      const newProducts = products.filter((product) => product._id !== _id);
-      setProducts(newProducts);
       toast.success(result.message || "Product deleted successfully");
+      // Remove product from state instantly
+      setProducts((prev) => prev.filter((product) => product._id !== _id));
+      setUserProducts((prev) => prev.filter((product) => product._id !== _id));
     } catch (error) {
       console.error("❌ Error deleting product:", error);
       toast.error(error.message || "Failed to delete product");
     }
   };
-
+  // Initial load
+  useEffect(() => {
+    fetchAllProducts();
+    fetchAllUserProducts();
+  }, []);
   return (
     <ProductContext.Provider
       value={{
@@ -140,6 +129,4 @@ export default function ProductProvider({ children }) {
     </ProductContext.Provider>
   );
 }
-
-// Custom hook
 export const useProductContext = () => useContext(ProductContext);

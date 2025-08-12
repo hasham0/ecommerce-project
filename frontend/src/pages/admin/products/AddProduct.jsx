@@ -11,20 +11,24 @@ export default function AddProduct() {
     name: "",
     price: "",
     category: "",
-    //    image: null,
   });
+  const [productImage, setProductImage] = useState(null);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProductInfo((prev) => ({ ...prev, [name]: value }));
   };
-  // const handleFileChange = (e) => {
-  //   setProductInfo((prev) => ({ ...prev, image: e.target.files[0] }));
-  // };
-
+  const handleFileChange = (e) => {
+    setProductImage(e.target.files[0]);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", productInfo.name);
+    formData.append("price", productInfo.price);
+    formData.append("category", productInfo.category);
+    formData.append("image", productImage);
     try {
-      const data = addProduct(productInfo);
+      const data = await addProduct(formData);
       toast.success(data.message);
       navigate("/admin/products");
     } catch (error) {
@@ -35,8 +39,8 @@ export default function AddProduct() {
         name: "",
         price: "",
         category: "",
-        //      image: null,
       });
+      setProductImage(null);
     }
   };
   return (
@@ -50,6 +54,7 @@ export default function AddProduct() {
         back
       </button>
       <form
+        encType="multipart/form-data"
         onSubmit={handleSubmit}
         className="mx-auto my-4 max-w-3xl space-y-6 rounded-xl bg-white p-6 shadow-md"
       >
@@ -104,17 +109,18 @@ export default function AddProduct() {
             <option value={"Beauty"}>Beauty</option>
           </select>
         </div>
-        {/* <div>
+        <div>
           <label htmlFor="" className="block text-sm font-medium text-gray-700">
             Product Image
           </label>
           <input
             type="file"
-            name="image"
+            name="productImage"
+            accept="image/*"
             onChange={handleFileChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm"
           />
-        </div> */}
+        </div>
         <div className="flex justify-end">
           <button
             type="submit"

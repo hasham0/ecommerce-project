@@ -4,20 +4,19 @@ import { useNavigate, useParams } from "react-router";
 import { useProductContext } from "../../../context/product-provider";
 
 export default function EditProduct() {
-  const params = useParams();
-  const navigate = useNavigate();
   const { products, updateProduct } = useProductContext();
-
-  const editProduct = products.find((product) => product._id === params._id);
-
+  const { _id } = useParams();
+  const navigate = useNavigate();
+  const editProduct = products.find((p) => p._id === _id);
   const [productInfo, setProductInfo] = useState({
     name: "",
     price: "",
     category: "",
     status: "",
-    //    image: null,
   });
-
+  const [previewImage, setPreviewImage] = useState(null);
+  const [productImage, setProductImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     if (editProduct) {
       setProductInfo({
@@ -25,28 +24,41 @@ export default function EditProduct() {
         price: editProduct.productPrice || "",
         category: editProduct.productCategory || "",
         status: editProduct.productStatus || "",
-        //      image: null,
       });
+      setPreviewImage(editProduct.productImage || null);
+      setProductImage(null);
     }
   }, [editProduct]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProductInfo((prev) => ({ ...prev, [name]: value }));
   };
-
-  // const handleFileChange = (e) => {
-  //   setProductInfo((prev) => ({ ...prev, image: e.target.files[0] }));
-  // };
-
+  const handleFileChange = (e) => {
+    setProductImage(e.target.files[0]);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const product = updateProduct(params._id, productInfo);
-    if (product) {
-      navigate("/admin/products");
+    if (!editProduct) return;
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("name", productInfo.name);
+      formData.append("price", productInfo.price);
+      formData.append("category", productInfo.category);
+      formData.append("status", productInfo.status);
+      if (productImage) {
+        formData.append("image", productImage);
+      }
+      const updated = await updateProduct(_id, formData);
+      if (updated) navigate("/admin/products");
+    } catch (err) {
+      console.error("Update failed:", err);
+    } finally {
+      setIsSubmitting(false);
+      setPreviewImage(null);
+      setProductImage(null);
     }
   };
-
   if (!editProduct) {
     return (
       <div className="p-10 text-center text-lg text-gray-500">
@@ -54,7 +66,6 @@ export default function EditProduct() {
       </div>
     );
   }
-
   return (
     <div className="flex-1 bg-gray-50 p-10">
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Edit Product</h1>
@@ -65,8 +76,8 @@ export default function EditProduct() {
         <FaArrowLeft />
         Back
       </button>
-
       <form
+        encType="multipart/form-data"
         onSubmit={handleSubmit}
         className="mx-auto my-4 max-w-3xl space-y-6 rounded-xl bg-white p-6 shadow-md"
       >
@@ -84,7 +95,6 @@ export default function EditProduct() {
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Price
@@ -99,7 +109,6 @@ export default function EditProduct() {
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Category
@@ -108,7 +117,8 @@ export default function EditProduct() {
             name="category"
             value={productInfo.category}
             onChange={handleInputChange}
-            className="mt-1 block min-w-sm rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+            required
+            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
             <option value="">--Select--</option>
             <option value="Cafe">Cafe</option>
@@ -120,7 +130,6 @@ export default function EditProduct() {
             <option value="Beauty">Beauty</option>
           </select>
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Status
@@ -129,32 +138,42 @@ export default function EditProduct() {
             name="status"
             value={productInfo.status}
             onChange={handleInputChange}
-            className="mt-1 block min-w-sm rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+            required
+            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
             <option value="">--Select--</option>
             <option value="In-Stock">In-Stock</option>
             <option value="Out-Of-Stock">Out-Of-Stock</option>
           </select>
         </div>
-
-        {/* <div>
+        <div>
           <label className="block text-sm font-medium text-gray-700">
             Product Image
           </label>
           <input
             type="file"
-            name="image"
+            name="productImage"
+            accept="image/*"
             onChange={handleFileChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm"
           />
-        </div> */}
-
+          {previewImage && (
+            <img
+              src={`/uploads/${previewImage}` || "https://placehold.co/600x400"}
+              alt="Current"
+              className="mt-2 h-20 rounded object-cover"
+            />
+          )}
+        </div>
         <div className="flex justify-end">
           <button
             type="submit"
-            className="mt-4 rounded bg-purple-500 px-6 py-2 text-white transition hover:rounded-xl hover:bg-purple-600"
+            disabled={isSubmitting}
+            className={`mt-4 rounded px-6 py-2 text-white transition hover:rounded-xl ${
+              isSubmitting ? "bg-gray-400" : "bg-purple-500 hover:bg-purple-600"
+            }`}
           >
-            Update Product
+            {isSubmitting ? "Updating..." : "Update Product"}
           </button>
         </div>
       </form>

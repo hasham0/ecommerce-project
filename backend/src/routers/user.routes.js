@@ -1,5 +1,6 @@
 // import router module and create instance
 import { Router } from "express";
+
 const router = Router();
 
 // import controllers

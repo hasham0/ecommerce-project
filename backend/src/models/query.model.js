@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const { Schema, model, models } = mongoose;
-
 const querySchema = new Schema(
   {
     username: {
@@ -36,7 +35,6 @@ const querySchema = new Schema(
     timestamps: true,
   }
 );
-
 const Query = models.Query || model("Query", querySchema);
 
 export default Query;

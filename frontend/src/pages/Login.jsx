@@ -10,12 +10,10 @@ export default function Login() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserLoginCredentials((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -46,7 +44,6 @@ export default function Login() {
       });
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-70 backdrop-blur-sm">
       <div className="relative mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
@@ -56,11 +53,9 @@ export default function Login() {
         >
           <FaTimes />
         </button>
-
         <h2 className="mb-4 text-center text-lg font-semibold text-green-950 md:text-2xl">
           Login To Continue...
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -79,7 +74,6 @@ export default function Login() {
               required
             />
           </div>
-
           <div className="relative">
             <label
               htmlFor="password"
@@ -104,7 +98,6 @@ export default function Login() {
               {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
             </button>
           </div>
-
           <button
             type="submit"
             className="mt-4 w-full rounded-md bg-green-500 py-2 text-white hover:bg-green-600"
@@ -112,7 +105,6 @@ export default function Login() {
             Login
           </button>
         </form>
-
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?&nbsp;
           <Link

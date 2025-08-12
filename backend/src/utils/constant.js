@@ -1,4 +1,5 @@
 import "dotenv/config";
+
 const ACCESS_TOKEN = "accessToken";
 const DB_NAME = "Ecommerce_Application";
 const cookieOptions = {
@@ -7,4 +8,5 @@ const cookieOptions = {
   maxAge: 3600000,
   sameSite: "Strict",
 };
+
 export { ACCESS_TOKEN, DB_NAME, cookieOptions };

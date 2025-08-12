@@ -41,10 +41,8 @@ const productList = [
     price: "$79.99",
   },
 ];
-
 export default function Cart() {
   const navigate = useNavigate();
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-70 backdrop-blur-sm">
       <div className="relative w-full max-w-xl rounded-xl bg-white p-6 shadow-lg">
@@ -55,20 +53,17 @@ export default function Cart() {
         >
           <FaTimes />
         </button>
-
         {/* <!-- Header --> */}
         <h2 className="mb-4 flex items-center justify-center gap-2 text-2xl font-semibold text-green-700">
           <span>Your Cart</span>
           <FaCartArrowDown />
         </h2>
-
         {/* <!-- Product List --> */}
         <div className="max-h-[50vh] space-y-4 overflow-y-auto pr-2">
           {productList.map((product) => (
             <CartCard key={product.id} product={product} buttonName="Remove" />
           ))}
         </div>
-
         {/* <!-- Total + Checkout --> */}
         <div className="mt-6 flex flex-col items-end gap-2">
           <span className="text-lg font-medium text-gray-700">

@@ -5,22 +5,23 @@ import { useQueryContext } from "../context/query-provider";
 
 export default function Contact() {
   const navigate = useNavigate();
-  const { addQuery } = useQueryContext();
+  const { addQuery, setQueries } = useQueryContext();
   const [queryForm, setQueryForm] = useState({
     username: "",
     email: "",
     query: "",
   });
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setQueryForm((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      const result = addQuery(queryForm);
+      const result = await addQuery(queryForm);
+      setQueries((prevQueries) => [...prevQueries, result.data]);
       toast.success(result.message);
       navigate("/");
     } catch (error) {
@@ -32,9 +33,9 @@ export default function Contact() {
         email: "",
         query: "",
       });
+      setIsSubmitting(false);
     }
   };
-
   return (
     <div className="mx-auto mt-24 max-w-3xl rounded-xl bg-white p-6 shadow-md">
       <h2 className="mb-4 text-center text-2xl font-bold text-green-500 underline underline-offset-2">
@@ -94,9 +95,10 @@ export default function Contact() {
         </div>
         <button
           type="submit"
+          disabled={isSubmitting}
           className="mt-4 w-full rounded-md bg-green-500 py-2 text-white hover:bg-green-600"
         >
-          Submit Query
+          {isSubmitting ? "Sending..." : "Submit"}
         </button>
       </form>
     </div>

@@ -4,7 +4,6 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const { Schema, model, models } = mongoose;
-
 const userSchema = new Schema(
   {
     username: {
@@ -45,7 +44,6 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-
 // encrypt password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -53,12 +51,10 @@ userSchema.pre("save", async function (next) {
   this.password = await bcryptjs.hash(this.password, salt);
   next();
 });
-
 // compare password
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcryptjs.compare(password, this.password);
 };
-
 // Generate Auth Token
 userSchema.methods.generateAuthToken = function () {
   return jwt.sign(
@@ -67,7 +63,6 @@ userSchema.methods.generateAuthToken = function () {
     { expiresIn: "24h" }
   );
 };
-
 const User = models.User || model("User", userSchema);
 
 export default User;

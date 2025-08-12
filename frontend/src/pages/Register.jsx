@@ -11,7 +11,6 @@ export default function Register() {
     phoneNumber: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserRegisterCredentials((prev) => ({ ...prev, [name]: value }));
@@ -54,7 +53,6 @@ export default function Register() {
         <h2 className="mb-4 text-center text-lg font-semibold text-green-950 md:text-2xl">
           Register Yourself
         </h2>
-
         <form onSubmit={handleSubmit}>
           <div>
             <label

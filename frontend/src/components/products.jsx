@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { useProductContext } from "../context/product-provider";
 import ProductCard from "./product-card";
 
 const Products = () => {
   const { userProducts } = useProductContext();
-
   return (
     <section className="mx-auto max-w-7xl px-6 py-8 md:py-14">
       <h2 className="mb-6 text-2xl font-semibold text-gray-700">
@@ -17,5 +17,4 @@ const Products = () => {
     </section>
   );
 };
-
 export default Products;

@@ -15,7 +15,7 @@ export default function EditProduct() {
     price: "",
     category: "",
     status: "",
-    image: null,
+    //    image: null,
   });
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function EditProduct() {
         price: editProduct.productPrice || "",
         category: editProduct.productCategory || "",
         status: editProduct.productStatus || "",
-        image: null,
+        //      image: null,
       });
     }
   }, [editProduct]);
@@ -35,9 +35,9 @@ export default function EditProduct() {
     setProductInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    setProductInfo((prev) => ({ ...prev, image: e.target.files[0] }));
-  };
+  // const handleFileChange = (e) => {
+  //   setProductInfo((prev) => ({ ...prev, image: e.target.files[0] }));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,7 +108,7 @@ export default function EditProduct() {
             name="category"
             value={productInfo.category}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+            className="mt-1 block min-w-sm rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
             <option value="">--Select--</option>
             <option value="Cafe">Cafe</option>
@@ -129,7 +129,7 @@ export default function EditProduct() {
             name="status"
             value={productInfo.status}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+            className="mt-1 block min-w-sm rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
             <option value="">--Select--</option>
             <option value="In-Stock">In-Stock</option>
@@ -137,7 +137,7 @@ export default function EditProduct() {
           </select>
         </div>
 
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700">
             Product Image
           </label>
@@ -147,7 +147,7 @@ export default function EditProduct() {
             onChange={handleFileChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm"
           />
-        </div>
+        </div> */}
 
         <div className="flex justify-end">
           <button

@@ -1,9 +1,12 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { useQueryContext } from "../context/query-provider";
 
 export default function Contact() {
   const navigate = useNavigate();
-  const [contactForm, setContactForm] = useState({
+  const { addQuery } = useQueryContext();
+  const [queryForm, setQueryForm] = useState({
     username: "",
     email: "",
     query: "",
@@ -11,12 +14,25 @@ export default function Contact() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setContactForm((prev) => ({ ...prev, [name]: value }));
+    setQueryForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("User Credentials:", userLoginCredentials);
+    try {
+      const result = addQuery(queryForm);
+      toast.success(result.message);
+      navigate("/");
+    } catch (error) {
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+      toast.error(error.message);
+    } finally {
+      setQueryForm({
+        username: "",
+        email: "",
+        query: "",
+      });
+    }
   };
 
   return (
@@ -36,7 +52,7 @@ export default function Contact() {
             type="text"
             id="username"
             name="username"
-            value={contactForm.username}
+            value={queryForm.username}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-green-500 focus:ring-green-500"
             required
@@ -53,7 +69,7 @@ export default function Contact() {
             type="text"
             id="email"
             name="email"
-            value={contactForm.email}
+            value={queryForm.email}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-green-500 focus:ring-green-500"
             required
@@ -70,7 +86,7 @@ export default function Contact() {
             type=""
             id="query"
             name="query"
-            value={contactForm.query}
+            value={queryForm.query}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-green-500 focus:ring-green-500"
             required

@@ -7,7 +7,7 @@ const productSchema = new Schema(
     productName: {
       type: String,
       minLength: [3, "please provide atleast 3 characters"],
-      maxLength: [20],
+      maxLength: [50],
       required: [true, "please provide the product name"],
     },
     productPrice: {
@@ -19,7 +19,7 @@ const productSchema = new Schema(
     productCategory: {
       type: String,
       minLength: [2, "please provide atleast 2 characters"],
-      maxLength: [8],
+      maxLength: [20],
       required: [true, "please provide the product category"],
     },
     productStatus: {

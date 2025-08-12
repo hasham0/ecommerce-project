@@ -1,34 +1,30 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { useProductContext } from "../../../context/product-provider";
 
 export default function AddProduct() {
+  const { addProduct } = useProductContext();
   const navigate = useNavigate();
   const [productInfo, setProductInfo] = useState({
     name: "",
     price: "",
     category: "",
+    //    image: null,
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProductInfo((prev) => ({ ...prev, [name]: value }));
   };
+  // const handleFileChange = (e) => {
+  //   setProductInfo((prev) => ({ ...prev, image: e.target.files[0] }));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/admin/add-product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productInfo),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Something went wrong");
-      }
-      const data = await response.json();
+      const data = addProduct(productInfo);
       toast.success(data.message);
       navigate("/admin/products");
     } catch (error) {
@@ -39,6 +35,7 @@ export default function AddProduct() {
         name: "",
         price: "",
         category: "",
+        //      image: null,
       });
     }
   };
@@ -95,7 +92,7 @@ export default function AddProduct() {
             id=""
             value={productInfo.category}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+            className="mt-1 block min-w-sm rounded-md border border-gray-300 p-2 shadow-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
           >
             <option value={"All"}>--Select--</option>
             <option value={"Cafe"}>Cafe</option>
@@ -113,13 +110,9 @@ export default function AddProduct() {
           </label>
           <input
             type="file"
-            id=""
-            name="productImage"
-            value={productInfo.name}
-            onChange={handleInputChange}
-            placeholder="Apple"
-            required
-            className="mt-1 w-full rounded-md border border-gray-300 p-2 shadow-sm"
+            name="image"
+            onChange={handleFileChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm"
           />
         </div> */}
         <div className="flex justify-end">

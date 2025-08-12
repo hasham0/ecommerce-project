@@ -25,7 +25,7 @@ const AdminSidebar = () => {
           }
         >
           Manage Products
-        </NavLink>{" "}
+        </NavLink>
         <NavLink
           to="/admin/quries"
           className={({ isActive }) =>

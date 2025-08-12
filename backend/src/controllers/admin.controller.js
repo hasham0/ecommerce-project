@@ -1,5 +1,6 @@
 import asyncHandler from "../middlewares/async-handler.middleware.js";
 import Product from "../models/product.model.js";
+import Query from "../models/query.model.js";
 import {
   CustomError,
   ValidationError,
@@ -30,22 +31,24 @@ const addProduct = asyncHandler(async (request, response) => {
     throw new CustomError("Product already exists with this name", 400);
   }
 
-  await Product.create({
+  const product = await Product.create({
     productName: name,
     productPrice: price,
     productCategory: category,
   });
 
-  return response.status(201).json({ message: "Product added successfully" });
+  return response
+    .status(201)
+    .json({ data: product, message: "Product added successfully" });
 });
 
 // ✅ Update Product
 const updateProduct = asyncHandler(async (request, response) => {
   const { _id } = request.params;
 
-  const { name, price, category } = request.body;
+  const { name, price, category, status } = request.body;
 
-  if (hasEmptyFields(_id, name, price, category)) {
+  if (hasEmptyFields(_id, name, price, category, status)) {
     throw new ValidationError("All fields are required");
   }
 
@@ -57,6 +60,7 @@ const updateProduct = asyncHandler(async (request, response) => {
   existingProduct.productName = name;
   existingProduct.productPrice = price;
   existingProduct.productCategory = category;
+  existingProduct.productStatus = status;
   await existingProduct.save();
 
   return response
@@ -82,4 +86,58 @@ const deleteProduct = asyncHandler(async (request, response) => {
   return response.status(200).json({ message: "Product deleted successfully" });
 });
 
-export { addProduct, allProducts, updateProduct, deleteProduct };
+// ✅ All Queries
+const allQueries = asyncHandler(async (request, response) => {
+  const quries = await Query.find();
+  return response.status(200).json({ data: quries });
+});
+
+// ✅ Update Product
+const updateQuery = asyncHandler(async (request, response) => {
+  const { _id } = request.params;
+
+  const { status } = request.body;
+
+  if (hasEmptyFields(status)) {
+    throw new ValidationError("All fields are required");
+  }
+
+  const existingQuery = await Query.findById(_id);
+  if (!existingQuery) {
+    throw new CustomError("Query does not exist with this ID", 404);
+  }
+
+  existingQuery.queryStatus = status;
+  await existingQuery.save();
+
+  return response
+    .status(200)
+    .json({ data: existingQuery, message: "Query updated successfully" });
+});
+
+// ✅ Delete Query
+const deleteQuery = asyncHandler(async (request, response) => {
+  const { _id } = request.params;
+
+  if (hasEmptyFields(_id)) {
+    throw new ValidationError("ID is required");
+  }
+
+  const isQueryExist = await Query.findById(_id);
+  if (!isQueryExist) {
+    throw new CustomError("Query does not exist with this ID", 404);
+  }
+
+  await Query.findByIdAndDelete(_id);
+
+  return response.status(200).json({ message: "Query deleted successfully" });
+});
+export {
+  addProduct,
+  allProducts,
+  updateProduct,
+  deleteProduct,
+  allQueries,
+  updateQuery,
+  deleteQuery,
+};

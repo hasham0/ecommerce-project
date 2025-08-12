@@ -6,7 +6,10 @@ import {
 } from "../utils/customize-error-message.js";
 import { ACCESS_TOKEN, cookieOptions } from "../utils/constant.js";
 import hasEmptyFields from "../utils/helpers/hasEmptyFields.js";
+import Product from "../models/product.model.js";
+import Query from "../models/query.model.js";
 
+// ✅ Register User
 const registerUser = asyncHandler(async (request, response) => {
   const { username, email, password, phoneNumber } = request.body;
 
@@ -30,6 +33,7 @@ const registerUser = asyncHandler(async (request, response) => {
   return response.status(200).json({ message: "User registered successfully" });
 });
 
+// ✅ Login User
 const loginUser = asyncHandler(async (request, response) => {
   const { email, password } = request.body;
 
@@ -61,4 +65,35 @@ const loginUser = asyncHandler(async (request, response) => {
     });
 });
 
-export { registerUser, loginUser };
+// ✅ Fetch All User Products that are in stock
+const userProducts = asyncHandler(async (request, response) => {
+  const products = await Product.find({
+    productStatus: "In-Stock",
+  });
+
+  if (!products.length) {
+    throw new CustomError("No products found", 404);
+  }
+
+  return response.status(200).json({ data: products });
+});
+
+// ✅ User Query
+const userQuery = asyncHandler(async (request, response) => {
+  const { username, email, query: queryText } = request.body;
+  if (hasEmptyFields(username, email, queryText)) {
+    throw new ValidationError("All fields are required");
+  }
+
+  const query = await Query.create({
+    username,
+    email,
+    query: queryText,
+  });
+
+  return response
+    .status(200)
+    .json({ data: query, message: "Query submitted successfully" });
+});
+
+export { registerUser, loginUser, userProducts, userQuery };

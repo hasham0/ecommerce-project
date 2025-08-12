@@ -6,6 +6,7 @@ import AdminProducts from "../pages/admin/AdminProducts";
 import AdminQuery from "../pages/admin/AdminQuery";
 import AddProduct from "../pages/admin/products/AddProduct";
 import EditProduct from "../pages/admin/products/EditProduct";
+import QueryReply from "../pages/admin/query/QueryReply";
 import Cart from "../pages/Cart";
 import Contact from "../pages/Contact";
 import Home from "../pages/Home";
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
           {
             path: "quries",
             element: <AdminQuery />,
+          },
+          {
+            path: "query-reply/:_id",
+            element: <QueryReply />,
           },
         ],
       },

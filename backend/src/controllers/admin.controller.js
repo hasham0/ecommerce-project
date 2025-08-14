@@ -7,12 +7,13 @@ import {
 } from "../utils/customize-error-message.js";
 import hasEmptyFields from "../utils/helpers/hasEmptyFields.js";
 import sendMail from "../utils/helpers/send-mail.js";
+import checkEmptyData from "../utils/products-length.js";
 
 // ✅ Fetch All Products
 const allProducts = asyncHandler(async (request, response) => {
   const products = await Product.find();
   if (!products.length) {
-    throw new CustomError("No products found", 404);
+    return checkEmptyData(response, products, "No products found");
   }
   return response.status(200).json({ data: products });
 });

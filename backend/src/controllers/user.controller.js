@@ -8,6 +8,7 @@ import { ACCESS_TOKEN, cookieOptions } from "../utils/constant.js";
 import hasEmptyFields from "../utils/helpers/hasEmptyFields.js";
 import Product from "../models/product.model.js";
 import Query from "../models/query.model.js";
+import checkEmptyData from "../utils/products-length.js";
 
 // ✅ Register User
 const registerUser = asyncHandler(async (request, response) => {
@@ -61,7 +62,7 @@ const userProducts = asyncHandler(async (request, response) => {
     productStatus: "In-Stock",
   });
   if (!products.length) {
-    throw new CustomError("No products found", 404);
+    return checkEmptyData(response, products, "No products found");
   }
   return response.status(200).json({ data: products });
 });

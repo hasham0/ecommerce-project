@@ -5,8 +5,8 @@ const router = Router();
 
 // import controllers
 import {
-  loginUser,
   registerUser,
+  loginUser,
   userProducts,
   userQuery,
 } from "../controllers/user.controller.js";

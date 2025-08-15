@@ -5,6 +5,7 @@ import {
   addToCart,
   deleteFromCart,
   removeFromCart,
+  removeProductFromCartData,
 } from "../app/features/cart/cartSlice";
 
 const CartCard = ({ product }) => {
@@ -70,7 +71,15 @@ const CartCard = ({ product }) => {
       </div>
       {/* <!-- Remove Button --> */}
       <button
-        onClick={() => dispatch(deleteFromCart({ _id }))}
+        onClick={() => {
+          dispatch(deleteFromCart({ _id }));
+          dispatch(
+            removeProductFromCartData({
+              userId: "689b3593799ed3649bb2d782",
+              productId: _id,
+            })
+          );
+        }}
         className="absolute top-3 right-3 rounded bg-red-500 p-2 text-white hover:bg-red-700"
       >
         <ImBin />

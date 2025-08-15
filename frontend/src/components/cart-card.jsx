@@ -21,12 +21,12 @@ const CartCard = ({ product }) => {
   const totalPrice = Number(cartQuantity * productPrice);
 
   return (
-    <div className="relative flex gap-x-6 rounded-lg bg-white p-4 shadow transition-all hover:shadow-lg">
+    <div className="relative flex gap-x-6 rounded-lg border border-gray-200 bg-white p-4 shadow transition-all lg:shadow-xl">
       {/* <!-- Image --> */}
       <img
         src={`/uploads/${productImage}` || "https://placehold.co/600x400"}
         alt={productName}
-        className="h-32 w-40 rounded-md object-cover"
+        className="h-32 w-40 rounded-md object-contain"
       />
       {/* <!-- Content --> */}
       <div className="flex w-full flex-col justify-between">

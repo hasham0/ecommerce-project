@@ -59,9 +59,16 @@ const loginUser = asyncHandler(async (request, response) => {
 
 // ✅ Fetch All User Products that are in stock
 const userProducts = asyncHandler(async (request, response) => {
-  const products = await Product.find({
-    productStatus: "In-Stock",
-  });
+  const { category } = request.query;
+  let products;
+  if (category && category.toLowerCase() !== "all") {
+    products = await Product.find({
+      productStatus: "In-Stock",
+      productCategory: { $regex: new RegExp(`^${category}$`, "i") },
+    });
+  } else {
+    products = await Product.find({ productStatus: "In-Stock" });
+  }
   if (!products.length) {
     return checkEmptyData(response, products, "No products found");
   }
@@ -103,7 +110,6 @@ const fetchCartProducts = asyncHandler(async (request, response) => {
 
 // ✅ Save Cart Products
 const saveCartProducts = asyncHandler(async (request, response) => {
-  console.log(request.body);
   const { userId, cartItems, totalAmount, totalQuantity } = request.body;
 
   if (hasEmptyFields(userId, totalAmount, totalQuantity)) {
@@ -128,7 +134,6 @@ const saveCartProducts = asyncHandler(async (request, response) => {
     throw new ValidationError("All fields are required in cart items");
   }
 
-  console.log(hasEmptyValue);
   let cart = await Cart.findOne({ userId });
 
   if (!cart) {
@@ -145,7 +150,7 @@ const saveCartProducts = asyncHandler(async (request, response) => {
     cart = await cart.save();
   }
 
-  return response.status(200).json({ data: "Cart saved successfully" });
+  return response.status(200).json({ message: "Cart saved successfully" });
 });
 
 export {

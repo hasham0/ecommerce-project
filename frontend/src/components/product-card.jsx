@@ -18,13 +18,14 @@ const ProductCard = ({ product }) => {
             `/uploads/${product.productImage}` || "https://placehold.co/600x400"
           }
           alt={product.productName}
-          className="mb-4 h-40 w-full rounded-md object-cover"
+          className="mb-4 h-40 w-full rounded-md object-contain"
         />
         <div className="flex justify-around">
-          <div className="">
-            <h3 className="text-center text-xl font-semibold text-gray-700">
-              {product.productName}
-            </h3>
+          <div className="text-center">
+            <h5 className="text-lg font-semibold text-gray-700">
+              {product.productName.charAt(0).toUpperCase() +
+                product.productName.slice(1)}
+            </h5>
             <p className="text-sm text-gray-400">
               Category: {product.productCategory}
             </p>

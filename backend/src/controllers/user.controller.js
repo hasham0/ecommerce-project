@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async (request, response) => {
 // ✅ Fetch All User Products that are in stock
 const userProducts = asyncHandler(async (request, response) => {
   const { category } = request.query;
-  let products;
+  let products = [];
   if (category && category.toLowerCase() !== "all") {
     products = await Product.find({
       productStatus: "In-Stock",
@@ -69,6 +69,19 @@ const userProducts = asyncHandler(async (request, response) => {
   } else {
     products = await Product.find({ productStatus: "In-Stock" });
   }
+  if (!products.length) {
+    return checkEmptyData(response, products, "No products found");
+  }
+  return response.status(200).json({ data: products });
+});
+
+// ✅ Fetch Serached Products that are in stock
+const serachProducts = asyncHandler(async (request, response) => {
+  const { searchItems = "" } = request.query;
+  const products = await Product.find({
+    productStatus: "In-Stock",
+    productName: { $regex: searchItems, $options: "i" },
+  });
   if (!products.length) {
     return checkEmptyData(response, products, "No products found");
   }
@@ -94,32 +107,25 @@ const userQuery = asyncHandler(async (request, response) => {
 // ✅ fetch Cart Products
 const fetchCartProducts = asyncHandler(async (request, response) => {
   const { _id } = request.params;
-
   if (hasEmptyFields(_id)) {
     throw new ValidationError("ID is required");
   }
-
   const cart = await Cart.findOne({ userId: _id });
-
   if (!cart) {
     throw new CustomError("Cart not found", 404);
   }
-
   return response.status(200).json({ data: cart });
 });
 
 // ✅ Save Cart Products
 const saveCartProducts = asyncHandler(async (request, response) => {
   const { userId, cartItems, totalAmount, totalQuantity } = request.body;
-
   if (hasEmptyFields(userId, totalAmount, totalQuantity)) {
     throw new ValidationError("All fields are required");
   }
-
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new ValidationError("Cart items cannot be empty");
   }
-
   const hasEmptyValue = cartItems.some((item) =>
     Object.values(item).some(
       (value) =>
@@ -129,13 +135,10 @@ const saveCartProducts = asyncHandler(async (request, response) => {
         (typeof value === "string" && value.trim() === "")
     )
   );
-
   if (hasEmptyValue) {
     throw new ValidationError("All fields are required in cart items");
   }
-
   let cart = await Cart.findOne({ userId });
-
   if (!cart) {
     cart = await Cart.create({
       userId,
@@ -149,7 +152,6 @@ const saveCartProducts = asyncHandler(async (request, response) => {
     cart.totalQuantity = totalQuantity;
     cart = await cart.save();
   }
-
   return response.status(200).json({ message: "Cart saved successfully" });
 });
 
@@ -159,5 +161,6 @@ export {
   userProducts,
   userQuery,
   fetchCartProducts,
+  serachProducts,
   saveCartProducts,
 };

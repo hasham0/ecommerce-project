@@ -106,18 +106,14 @@ const deleteQuery = asyncHandler(async (request, response) => {
 const mailReply = asyncHandler(async (request, response) => {
   const { _id } = request.params;
   const { to, from, subject, body } = request.body;
-  // Validate required fields
   if (hasEmptyFields(_id, to, from, subject, body)) {
     throw new ValidationError("All fields are required");
   }
-  // Check if query exists
   const query = await Query.findById(_id);
   if (!query) {
     throw new CustomError("Query does not exist with this ID", 404);
   }
-  // Send the email
   await sendMail({ to, from, subject, body });
-  // Update query status
   const updatedQuery = await Query.findByIdAndUpdate(
     _id,
     { queryStatus: "Read" },

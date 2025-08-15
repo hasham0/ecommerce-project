@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 export const ProductContext = createContext({
   products: [],
   userProducts: [],
+  setCategory: () => {},
   addProduct: () => {},
   updateProduct: () => {},
   deleteProduct: () => {},
@@ -11,6 +12,8 @@ export const ProductContext = createContext({
 export default function ProductProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
+  const [category, setCategory] = useState("all");
+
   // Fetch all products
   const fetchAllProducts = async () => {
     try {
@@ -27,9 +30,11 @@ export default function ProductProvider({ children }) {
     }
   };
   // Fetch products for the current user
-  const fetchAllUserProducts = async () => {
+  const fetchAllUserProducts = async (categoryName = "all") => {
     try {
-      const response = await fetch("/api/auth/user-products");
+      const response = await fetch(
+        `/api/auth/user-products?category=${categoryName}`
+      );
       if (!response.ok)
         throw new Error(
           (await response.json()).message || "Something went wrong"
@@ -113,13 +118,18 @@ export default function ProductProvider({ children }) {
   // Initial load
   useEffect(() => {
     fetchAllProducts();
-    fetchAllUserProducts();
   }, []);
+
+  useEffect(() => {
+    fetchAllUserProducts(category);
+  }, [category]);
+
   return (
     <ProductContext.Provider
       value={{
         products,
         userProducts,
+        setCategory,
         addProduct,
         updateProduct,
         deleteProduct,

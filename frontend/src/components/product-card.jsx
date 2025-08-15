@@ -4,12 +4,11 @@ import { addToCart, removeFromCart } from "../app/features/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
-
   const currentProduct = useSelector((state) =>
-    state.cart.cartItems.find((item) => item._id === product._id)
+    state.cart.cartItems?.find((item) => item._id === product._id)
   );
 
-  const quantity = currentProduct?.cartQuantity || 0;
+  const quantity = currentProduct?.cartQuantity ?? 0;
 
   return (
     <div key={product._id} className="rounded-lg bg-white p-4 transition-all">
@@ -34,7 +33,7 @@ const ProductCard = ({ product }) => {
             </p>
           </div>
 
-          {quantity > 0 && (
+          {currentProduct && quantity > 0 && (
             <div className="mt-2 flex items-center justify-center gap-2">
               <button
                 onClick={() => dispatch(removeFromCart(product))}

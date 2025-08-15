@@ -9,6 +9,7 @@ import hasEmptyFields from "../utils/helpers/hasEmptyFields.js";
 import Product from "../models/product.model.js";
 import Query from "../models/query.model.js";
 import checkEmptyData from "../utils/products-length.js";
+import Cart from "../models/cart.model.js";
 
 // ✅ Register User
 const registerUser = asyncHandler(async (request, response) => {
@@ -83,4 +84,75 @@ const userQuery = asyncHandler(async (request, response) => {
     .json({ data: query, message: "Query submitted successfully" });
 });
 
-export { registerUser, loginUser, userProducts, userQuery };
+// ✅ fetch Cart Products
+const fetchCartProducts = asyncHandler(async (request, response) => {
+  const { _id } = request.params;
+
+  if (hasEmptyFields(_id)) {
+    throw new ValidationError("ID is required");
+  }
+
+  const cart = await Cart.findOne({ userId: _id });
+
+  if (!cart) {
+    throw new CustomError("Cart not found", 404);
+  }
+
+  return response.status(200).json({ data: cart });
+});
+
+// ✅ Save Cart Products
+const saveCartProducts = asyncHandler(async (request, response) => {
+  console.log(request.body);
+  const { userId, cartItems, totalAmount, totalQuantity } = request.body;
+
+  if (hasEmptyFields(userId, totalAmount, totalQuantity)) {
+    throw new ValidationError("All fields are required");
+  }
+
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
+    throw new ValidationError("Cart items cannot be empty");
+  }
+
+  const hasEmptyValue = cartItems.some((item) =>
+    Object.values(item).some(
+      (value) =>
+        value === "" ||
+        value === null ||
+        value === undefined ||
+        (typeof value === "string" && value.trim() === "")
+    )
+  );
+
+  if (hasEmptyValue) {
+    throw new ValidationError("All fields are required in cart items");
+  }
+
+  console.log(hasEmptyValue);
+  let cart = await Cart.findOne({ userId });
+
+  if (!cart) {
+    cart = await Cart.create({
+      userId,
+      cartItems,
+      totalAmount,
+      totalQuantity,
+    });
+  } else {
+    cart.cartItems = cartItems;
+    cart.totalAmount = totalAmount;
+    cart.totalQuantity = totalQuantity;
+    cart = await cart.save();
+  }
+
+  return response.status(200).json({ data: "Cart saved successfully" });
+});
+
+export {
+  registerUser,
+  loginUser,
+  userProducts,
+  userQuery,
+  fetchCartProducts,
+  saveCartProducts,
+};

@@ -1,8 +1,14 @@
+import { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { clearCart } from "../app/features/cart/cartSlice";
+import {
+  clearCart,
+  clearCartData,
+  fetchCartData,
+  saveCartData,
+} from "../app/features/cart/cartSlice";
 import CartCard from "../components/cart-card";
 
 export default function Cart() {
@@ -11,6 +17,23 @@ export default function Cart() {
   const { cartItems, cartTotalQuantity, cartTotalAmount } = useSelector(
     (state) => state.cart
   );
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      dispatch(
+        saveCartData({
+          userId: "689b3593799ed3649bb2d782",
+          cartItems: cartItems,
+          totalAmount: cartTotalAmount,
+          totalQuantity: cartTotalQuantity,
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchCartData("689b3593799ed3649bb2d782"));
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -43,7 +66,14 @@ export default function Cart() {
         {/* Total + Checkout */}
         <div className="mt-6 flex items-end justify-between gap-2">
           <button
-            onClick={() => dispatch(clearCart())}
+            disabled={cartItems.length === 0}
+            onClick={() => {
+              dispatch(clearCart());
+              dispatch(clearCartData("689b3593799ed3649bb2d782"));
+              setTimeout(() => {
+                navigate("/");
+              }, 2000);
+            }}
             className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-700"
           >
             Clear Cart
@@ -55,7 +85,10 @@ export default function Cart() {
             <span className="text-lg font-medium text-gray-700">
               Total amount: ${cartTotalAmount}
             </span>
-            <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700">
+            <button
+              disabled={cartItems.length === 0}
+              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
+            >
               Checkout
             </button>
           </div>

@@ -1,10 +1,13 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { FaRegEye, FaRegEyeSlash, FaTimes } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
+import { loginUser } from "../app/features/auth/authSlice.js";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [userLoginCredentials, setUserLoginCredentials] = useState({
     email: "",
     password: "",
@@ -17,20 +20,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userLoginCredentials),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Something went wrong");
-      }
-      const result = await response.json();
-      toast.success(result.message);
-      if (result.user.role === "admin") {
+      const result = await dispatch(loginUser(userLoginCredentials));
+
+      if (result.payload.user.role === "admin") {
         return navigate("/admin");
       }
       navigate("/");
@@ -44,6 +36,7 @@ export default function Login() {
       });
     }
   };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-70 backdrop-blur-sm">
       <div className="relative mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">

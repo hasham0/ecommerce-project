@@ -9,8 +9,10 @@ import {
   clearCartProducts,
   removeProductFromCart,
 } from "../controllers/cart.controller.js";
+import { isUserAuthenticated } from "../middlewares/auth.middleware.js";
 
 // cart routes
+router.use(isUserAuthenticated);
 router.route("/fetch-cart/:_id").get(fetchCartProducts);
 router.route("/save-cart").post(saveCartProducts);
 router

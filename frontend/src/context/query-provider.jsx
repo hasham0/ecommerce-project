@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 // Create context
 export const QueryContext = createContext({
@@ -9,9 +10,12 @@ export const QueryContext = createContext({
   deleteQuery: () => {},
   replyQuery: () => {},
 });
+
 // Provider
 export default function QueryProvider({ children }) {
   const [queries, setQueries] = useState([]);
+  const { user } = useSelector((state) => state.auth);
+
   // Add query
   const addQuery = async (formQueryData) => {
     const response = await fetch("/api/auth/user-query", {
@@ -28,6 +32,7 @@ export default function QueryProvider({ children }) {
     }
     return result;
   };
+
   // Fetch all queries on mount
   const fetchAllQueries = async () => {
     try {
@@ -40,12 +45,15 @@ export default function QueryProvider({ children }) {
       setQueries(result.data);
     } catch (error) {
       console.error("❌ Error fetching queries:", error);
-      toast.error(error.message || "Failed to fetch queries");
     }
   };
+
   useEffect(() => {
-    fetchAllQueries();
-  }, []);
+    if (user?.role === "admin") {
+      fetchAllQueries();
+    }
+  }, [user]);
+
   // Delete query by ID
   const deleteQuery = async (_id) => {
     try {
@@ -62,9 +70,9 @@ export default function QueryProvider({ children }) {
       toast.success(result.message || "Query deleted successfully");
     } catch (error) {
       console.error("❌ Error deleting query:", error);
-      toast.error(error.message || "Failed to delete query");
     }
   };
+
   // send query to admin
   const replyQuery = async (id, formQueryData) => {
     const response = await fetch(`/api/admin/mail-reply/${id}`, {
@@ -81,6 +89,7 @@ export default function QueryProvider({ children }) {
     const result = await response.json();
     return result;
   };
+
   return (
     <QueryContext.Provider
       value={{
@@ -95,5 +104,6 @@ export default function QueryProvider({ children }) {
     </QueryContext.Provider>
   );
 }
+
 // Custom hook
 export const useQueryContext = () => useContext(QueryContext);

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export const ProductContext = createContext({
   products: [],
@@ -13,6 +14,7 @@ export default function ProductProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
   const [category, setCategory] = useState("all");
+  const { user } = useSelector((state) => state.auth);
 
   // Fetch all products
   const fetchAllProducts = async () => {
@@ -26,7 +28,7 @@ export default function ProductProvider({ children }) {
       setProducts(result.data || []);
     } catch (error) {
       console.error("❌ Error fetching products:", error);
-      toast.error(error.message || "Failed to fetch products");
+      throw error;
     }
   };
   // Fetch products for the current user
@@ -43,7 +45,7 @@ export default function ProductProvider({ children }) {
       setUserProducts(result.data || []);
     } catch (error) {
       console.error("❌ Error fetching user products:", error);
-      toast.error(error.message || "Failed to fetch products");
+      throw error;
     }
   };
   // Add product (update state directly)
@@ -64,7 +66,6 @@ export default function ProductProvider({ children }) {
       return data;
     } catch (error) {
       console.error("❌ Error adding product:", error);
-      toast.error(error.message || "Failed to add product");
       throw error;
     }
   };
@@ -91,7 +92,6 @@ export default function ProductProvider({ children }) {
       return true;
     } catch (error) {
       console.error("❌ Error updating product:", error);
-      toast.error(error.message || "Failed to update product");
       throw error;
     }
   };
@@ -112,13 +112,15 @@ export default function ProductProvider({ children }) {
       setUserProducts((prev) => prev.filter((product) => product._id !== _id));
     } catch (error) {
       console.error("❌ Error deleting product:", error);
-      toast.error(error.message || "Failed to delete product");
+      throw error;
     }
   };
   // Initial load
   useEffect(() => {
-    fetchAllProducts();
-  }, []);
+    if (user && user.role === "admin") {
+      fetchAllProducts();
+    }
+  }, [user]);
 
   useEffect(() => {
     fetchAllUserProducts(category);

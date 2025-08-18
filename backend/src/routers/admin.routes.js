@@ -12,20 +12,40 @@ import {
   mailReply,
 } from "../controllers/admin.controller.js";
 import upload from "../middlewares/multer.middleware.js";
+import {
+  isUserAuthenticated,
+  isUserAuthorizeAdmin,
+} from "../middlewares/auth.middleware.js";
 
 // product routes
 router.route("/all-products").get(allProducts);
-router.route("/add-product").post([upload.single("image")], addProduct);
+router
+  .route("/add-product")
+  .post(
+    [isUserAuthenticated, isUserAuthorizeAdmin],
+    [upload.single("image")],
+    addProduct
+  );
 router
   .route("/update-product/:_id")
-  .put([upload.single("image")], updateProduct);
-router.route("/delete-product/:_id").delete(deleteProduct);
+  .put(
+    [isUserAuthenticated, isUserAuthorizeAdmin],
+    [upload.single("image")],
+    updateProduct
+  );
+router
+  .route("/delete-product/:_id")
+  .delete([isUserAuthenticated, isUserAuthorizeAdmin], deleteProduct);
 
 // query routes
 router.route("/all-queries").get(allQueries);
-router.route("/delete-query/:_id").delete(deleteQuery);
+router
+  .route("/delete-query/:_id")
+  .delete([isUserAuthenticated, isUserAuthorizeAdmin], deleteQuery);
 
 // query reply
-router.route("/mail-reply/:_id").post(mailReply);
+router
+  .route("/mail-reply/:_id")
+  .post([isUserAuthenticated, isUserAuthorizeAdmin], mailReply);
 
 export default router;

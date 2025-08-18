@@ -22,7 +22,9 @@ export default function EditProduct() {
       setProductInfo({
         name: editProduct.productName || "",
         price: editProduct.productPrice || "",
-        category: editProduct.productCategory || "",
+        category:
+          editProduct.productCategory[0].toUpperCase() +
+            editProduct.productCategory.slice(1) || "",
         status: editProduct.productStatus || "",
       });
       setPreviewImage(editProduct.productImage || null);

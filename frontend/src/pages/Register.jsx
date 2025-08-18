@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash, FaTimes } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
+import { registerUser } from "../app/features/auth/authSlice.js";
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [userRegisterCredentials, setUserRegisterCredentials] = useState({
     username: "",
     email: "",
@@ -18,17 +21,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userRegisterCredentials),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Something went wrong");
-      }
+      const result = dispatch(registerUser(userRegisterCredentials));
       setUserRegisterCredentials({
         username: "",
         email: "",

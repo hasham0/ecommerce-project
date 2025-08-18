@@ -54,7 +54,35 @@ const loginUser = asyncHandler(async (request, response) => {
     .json({
       message: `Welcome back ${userObject.username}`,
       user: userObject,
+      [ACCESS_TOKEN]: token,
     });
+});
+
+// ✅ logout User
+const logoutUser = asyncHandler(async (request, response) => {
+  response.clearCookie(ACCESS_TOKEN, cookieOptions);
+  return response
+    .status(200)
+    .json({ success: true, message: "User logged out successfully" });
+});
+
+// ✅ delete Account
+const deleteAccount = asyncHandler(async (request, response) => {
+  const { _id, role } = request.user;
+  if (hasEmptyFields(_id)) {
+    throw new ValidationError("User ID is required");
+  }
+  if (role === "admin") {
+    throw new CustomError("Admin cannot delete account", 400);
+  }
+  if (role !== "user") {
+    throw new CustomError("Only user can delete account", 400);
+  }
+  await User.findByIdAndDelete(_id);
+  await Cart.findByIdAndDelete(_id);
+  return response
+    .status(200)
+    .json({ success: true, message: "Account deleted successfully" });
 });
 
 // ✅ Fetch All User Products that are in stock
@@ -158,6 +186,8 @@ const saveCartProducts = asyncHandler(async (request, response) => {
 export {
   registerUser,
   loginUser,
+  logoutUser,
+  deleteAccount,
   userProducts,
   userQuery,
   fetchCartProducts,

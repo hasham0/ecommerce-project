@@ -1,5 +1,6 @@
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
 import { addToCart, removeFromCart } from "../app/features/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
@@ -12,7 +13,10 @@ const ProductCard = ({ product }) => {
 
   return (
     <div key={product._id} className="rounded-lg bg-white p-4 transition-all">
-      <div className="rounded-xl bg-white p-4 shadow transition hover:shadow-lg">
+      <Link
+        to={`/product/${product._id}`}
+        className="rounded-xl bg-white p-4 shadow transition hover:shadow-lg"
+      >
         <img
           src={
             `/uploads/${product.productImage}` || "https://placehold.co/600x400"
@@ -20,42 +24,39 @@ const ProductCard = ({ product }) => {
           alt={product.productName}
           className="mb-4 h-40 w-full rounded-md object-contain"
         />
-        <div className="flex justify-around">
-          <div className="text-center">
-            <h5 className="text-lg font-semibold text-gray-700">
-              {product.productName.charAt(0).toUpperCase() +
-                product.productName.slice(1)}
-            </h5>
-            <p className="text-sm text-gray-400">
-              Category: {product.productCategory}
-            </p>
-            <p className="mt-1 font-bold text-green-500">
-              Price: ${product.productPrice}
-            </p>
-          </div>
-
-          {currentProduct && quantity > 0 && (
-            <div className="mt-2 flex items-center justify-center gap-2">
-              <button
-                onClick={() => dispatch(removeFromCart(product))}
-                className="rounded bg-gray-500 p-2 text-white hover:bg-gray-700"
-              >
-                <FaMinusCircle />
-              </button>
-
-              <span className="min-w-[24px] text-center font-medium">
-                {quantity}
-              </span>
-              <button
-                onClick={() => dispatch(addToCart(product))}
-                className="rounded bg-gray-500 p-2 text-white hover:bg-gray-700"
-              >
-                <FaPlusCircle />
-              </button>
-            </div>
-          )}
+        <div className="flex flex-col items-center">
+          <h5 className="text-lg font-semibold text-gray-700">
+            {product.productName.charAt(0).toUpperCase() +
+              product.productName.slice(1)}
+          </h5>
+          <p className="text-sm text-gray-400">
+            Category: {product.productCategory}
+          </p>
+          <p className="mt-1 font-bold text-green-500">
+            Price: ${product.productPrice}
+          </p>
         </div>
-      </div>
+      </Link>
+      {currentProduct && quantity > 0 && (
+        <div className="flex items-center justify-center gap-2">
+          <button
+            onClick={() => dispatch(removeFromCart(product))}
+            className="rounded bg-gray-500 p-2 text-white hover:bg-gray-700"
+          >
+            <FaMinusCircle />
+          </button>
+
+          <span className="min-w-[24px] text-center font-medium">
+            {quantity}
+          </span>
+          <button
+            onClick={() => dispatch(addToCart(product))}
+            className="rounded bg-gray-500 p-2 text-white hover:bg-gray-700"
+          >
+            <FaPlusCircle />
+          </button>
+        </div>
+      )}
 
       {!quantity && (
         <button
